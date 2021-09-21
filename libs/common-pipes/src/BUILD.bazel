@@ -1,0 +1,15 @@
+load("//tools:angular_ts_library.bzl", "ng_ts_library")
+
+package(default_visibility = ["//:__subpackages__"])
+
+ng_ts_library(
+    name = "common-pipes",
+    srcs = glob(["**/*.ts"]),
+    tsconfig = "//libs/common-pipes:tsconfig-lib",
+    module_name = "@tritanbuild/common-pipes",
+    package_name = "@tritanbuild/common-pipes",
+    deps = [
+        "@npm//@angular/common",
+        "@npm//@angular/core"
+    ]
+)

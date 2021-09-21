@@ -1,31 +1,6 @@
 {
   "version": 1,
   "projects": {
-    "common-pipes": {
-      "projectType": "library",
-      "root": "libs/common-pipes",
-      "sourceRoot": "libs/common-pipes/src",
-      "prefix": "tritanbuild",
-      "architect": {
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/common-pipes"],
-          "options": {
-            "jestConfig": "libs/common-pipes/jest.config.js",
-            "passWithNoTests": true
-          }
-        },
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": [
-              "libs/common-pipes/src/**/*.ts",
-              "libs/common-pipes/src/**/*.html"
-            ]
-          }
-        }
-      }
-    },
     "demo": {
       "projectType": "application",
       "root": "apps/demo",
@@ -33,26 +8,60 @@
       "prefix": "tritanbuild",
       "architect": {
         "build": {
-          "builder": "@bazel/angular:build",
+          "builder": "@angular-devkit/build-angular:browser",
           "outputs": ["{options.outputPath}"],
           "options": {
-            "targetLabel": "//apps/demo/src:prodapp",
-            "bazelCommand": "build"
-          }
-        },
-        "serve": {
-          "builder": "@bazel/angular:build",
-          "options": {
-            "targetLabel": "//apps/demo/src:devserver",
-            "bazelCommand": "run",
-            "watch": true
+            "outputPath": "dist/apps/demo",
+            "index": "apps/demo/src/index.html",
+            "main": "apps/demo/src/main.ts",
+            "polyfills": "apps/demo/src/polyfills.ts",
+            "tsConfig": "apps/demo/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": ["apps/demo/src/favicon.ico", "apps/demo/src/assets"],
+            "styles": ["apps/demo/src/styles.scss"],
+            "scripts": []
           },
           "configurations": {
             "production": {
-              "targetLabel": "//apps/demo/src:prodserver"
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "apps/demo/src/environments/environment.ts",
+                  "with": "apps/demo/src/environments/environment.prod.ts"
+                }
+              ],
+              "outputHashing": "all"
             },
             "development": {
-              "targetLabel": "//apps/demo/src:devserver"
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "browserTarget": "demo:build:production"
+            },
+            "development": {
+              "browserTarget": "demo:build:development"
             }
           },
           "defaultConfiguration": "development"

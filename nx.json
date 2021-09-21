@@ -27,6 +27,9 @@
     ]
   },
   "projects": {
+    "common-pipes": {
+      "tags": []
+    },
     "demo": {
       "tags": []
     },
